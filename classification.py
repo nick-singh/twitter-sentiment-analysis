@@ -155,6 +155,7 @@ def tests(num_features):
 #finds word scores
 word_scores = create_word_scores()    
 num_of_words = len(word_scores)
+best_words = {}
 
 # numbers of features to select
 
@@ -163,14 +164,12 @@ tests_to_run = []
 for num in range(1, 11):    
     number_of_features = int(math.floor(num_of_words*num/10))
     print number_of_features
-    tests_to_run.append(number_of_features)
+    print 'evaluating best %d word features' % (number_of_features)
+    best_words = find_best_words(word_scores, number_of_features)
+    print "number of best words " + str(len(best_words))
 
-    
-pool = Pool(cpu_count() * 5)
-print "Starting process.."
-csvFile = pool.map(tests, tests_to_run)
-pool.close()
-pool.join()
+    cPickle.dump(best_words, open('tests/'+str(number_of_features)+features_file,'wb'))    
+    csvFile.append(run_tests(number_of_features))
 
 
 tocsvFile(csvFile,'results')
