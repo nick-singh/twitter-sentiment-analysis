@@ -5,6 +5,8 @@ from multiprocessing import Process, Queue, Pool, cpu_count
 from nltk.classify import NaiveBayesClassifier
 from nltk.metrics import *
 from nltk.probability import FreqDist, ConditionalFreqDist
+from nltk.classify.scikitlearn import SklearnClassifier
+from sklearn.naive_bayes import BernoulliNB
 
 
 pos_data_file = 'datasets/pos-800000.csv.clean_tweet.json'
@@ -34,7 +36,9 @@ def evaluate_features(feature_length, extract_features):
 
     #trains a Naive Bayes Classifier
     print "Classifying..."
-    classifier = NaiveBayesClassifier.train(trainFeatures)  
+    classifier = SklearnClassifier(BernoulliNB())
+    classifier.train(trainFeatures)
+    # classifier = NaiveBayesClassifier.train(trainFeatures)  
 
     cPickle.dump(classifier, open('tests/'+str(feature_length)+classifier_file,'wb'))
 
