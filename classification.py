@@ -7,7 +7,8 @@ from nltk.metrics import *
 from nltk.probability import FreqDist, ConditionalFreqDist
 from nltk.classify.scikitlearn import SklearnClassifier
 from sklearn.naive_bayes import BernoulliNB
-
+from sklearn.svm import SVC, LinearSVC
+from sklearn.linear_model import LogisticRegression,SGDClassifier
 
 pos_data_file = 'datasets/pos-800000.csv.clean_tweet.json'
 neg_data_file = 'datasets/neg-800000.csv.clean_tweet.json'
@@ -34,10 +35,22 @@ def evaluate_features(feature_length, extract_features):
     testFeatures = posFeatures[posCutoff:] + negFeatures[negCutoff:]
 
 
-    #trains a Naive Bayes Classifier
+    
     print "Classifying..."
-    classifier = SklearnClassifier(BernoulliNB())
+    #regression classification
+    classifier = SklearnClassifier(LogisticRegression())
     classifier.train(trainFeatures)
+
+
+    # supprot vector classification
+    # classifier = SklearnClassifier(LinearSVC())
+    # classifier.train(trainFeatures)
+
+    #trains a Naive Bayes Classifier, sci kit classifier
+    # classifier = SklearnClassifier(BernoulliNB())
+    # classifier.train(trainFeatures)
+
+    # nltk Classifier
     # classifier = NaiveBayesClassifier.train(trainFeatures)  
 
     cPickle.dump(classifier, open('tests/'+str(feature_length)+classifier_file,'wb'))

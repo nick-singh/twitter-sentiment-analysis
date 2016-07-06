@@ -17,6 +17,15 @@ pos_data_file = "datasets/pos-800000.csv"
 neg_data_file = "datasets/neg-800000.csv"
 test = "datasets/testdata.manual.2009.06.14.csv"
 
+emoticons_str = r"""
+    (?:
+        [:=;] # Eyes
+        [oO\-]? # Nose (optional)
+        [D\)\]\(\]/\\OpP] # Mouth
+    )"""
+
+emoticon_re = re.compile(r'^'+emoticons_str+'$', re.VERBOSE | re.IGNORECASE)
+
 
 def get_feature_list(wordlists):
 	all_words = []
@@ -28,15 +37,15 @@ def get_feature_list(wordlists):
 def processTweets(tweet):
 	#process the tweet
 
-	#Convert to lowercase
-	tweet = tweet.lower()
-
 	tweet = tweet.decode('utf-8','ignore').encode("utf-8")
 
+	#Convert to lowercase
+	tweet = tweet.lower()	
+
 	#convert www.* or https?:// to URL
-	tweet = re.sub('((www\.[^\s]+)|(https?://[^\s]+))','URL',tweet)
+	tweet = re.sub('((www\.[^\s]+)|(https?://[^\s]+))','',tweet)
 	#Convert @username to AT_USER
-	tweet = re.sub('@[^\s]+','AT_USER',tweet)
+	tweet = re.sub('@[^\s]+','',tweet)
 	#remove additional white spaces
 	tweet = re.sub('[\s]+', ' ', tweet)
 	#Replace #word with word
